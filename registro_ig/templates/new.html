@@ -3,9 +3,16 @@
     <h1>
         Alta de ingreso-Gasto
     </h1>
-    <p>
-        En construcción entrada de datos
-    </p>
+    <form action="/nuevo" method="post">
+        <label for="date">Fecha:</label>
+        <input type="date" name="date" id="date" required>
+        <label for="concept">Concepto:</label>
+        <input type="text" name="concept" id="concept" placeholder="Introduce en qué te has gastado la pasta" required>
+        <label for="quantity">Cantidad</label>
+        <input type="number" name="quantity" id="quantity" placeholder="Euros gastados o ingresados" step="0.01" required>
+
+        <input type="submit" value="Aceptar">
+    </form>
     <a href="/">Volver</a>
 {% endblock %}
    
