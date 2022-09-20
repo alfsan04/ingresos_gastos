@@ -5,14 +5,20 @@
     </h1>
     <form action="/nuevo" method="post">
         <label for="date">Fecha:</label>
-        <input type="date" name="date" id="date" required>
+        <input type="date" name="date" id="date" value="{{ dataForm.date }}" required>
         <label for="concept">Concepto:</label>
-        <input type="text" name="concept" id="concept" placeholder="Introduce en qué te has gastado la pasta" required>
+        <input type="text" name="concept" id="concept" placeholder="Introduce en qué te has gastado la pasta" value="{{ dataForm.concept }}">
         <label for="quantity">Cantidad</label>
-        <input type="number" name="quantity" id="quantity" placeholder="Euros gastados o ingresados" step="0.01" required>
+        <input type="number" name="quantity" id="quantity" placeholder="Euros gastados o ingresados" step="0.01" value="{{ dataForm.quantity }}">
 
         <input type="submit" value="Aceptar">
     </form>
-    <a href="/">Volver</a>
+    <article class="errores">
+        <ul>
+            {% for error in msgErrors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </article>
 {% endblock %}
    
