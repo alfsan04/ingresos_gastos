@@ -1,5 +1,5 @@
 
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, url_for
 import csv
 from registro_ig import app
 from datetime import date
@@ -24,11 +24,23 @@ def alta():
         
         errores = validaFormulario(request.form)
         if not errores:
+            fichero = open("data/last_id.txt","r")
+            registro = fichero.read()
+            id = int(registro) + 1
+            fichero.close()
+
             fichero = open("data/movimientos.txt", "a", newline = "")
             csvWriter = csv.writer(fichero, delimiter=",", quotechar='"')
             # Generar un nuevo id
-            csvWriter.writerow([request.form["date"], request.form["concept"], request.form["quantity"]])
+            # Leer todo el fichero y me quedo con el último registro
+            # El nuevo id sera el id del ultimo registro + 1
+            csvWriter.writerow(["{}".format(id), request.form["date"], request.form["concept"], request.form["quantity"]])
             fichero.close()
+
+            fichero = open("data/last_id.txt", "w")
+            fichero.write(str(id))
+            fichero.close()
+
             return redirect("/")
         else:
             return render_template("new.html", pageTitle="Alta", msgErrors=errores, dataForm=dict(request.form))
@@ -79,8 +91,22 @@ def borrar(id):
         2. devolver el formulario html con los datos de mi registro, no modificables
         3. tendra un boton que diga confirmar
         """
+        fichero = open("data/movimientos.txt", "r", newline="")
+        csvReader = csv.reader(fichero, delimiter=",",quotechar='"')
+        registro_definitivo = []
+        for registro in csvReader:
+            if registro[0] == str(id):
+                registro_definitivo = registro
+                break
+        
+        fichero.close()
+
+        if registro_definitivo:
+            return render_template("delete.html", registro = registro_definitivo)
+        else:
+            return redirect(url_for("index"))
     else:
         """
         borrar el registro
         """
-        pass
+        return f"Este es el id que vamos a borrar {id}"

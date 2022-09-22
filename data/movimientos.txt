@@ -3,3 +3,7 @@
 3,06-01-2022,"Los Padres, firmado : el banquero",100.0
 4,2022-09-20,cosillas,100
 5,2022-09-14,Cosas,100
+6,2022-09-21,Gasolina,-89
+7,2022-09-21,Gasolina,-89
+8,2022-09-21,Horno,-350
+9,2022-09-20,Pago de camisetas,57
