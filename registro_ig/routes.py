@@ -1,12 +1,14 @@
 
 from flask import render_template, request, redirect, url_for
 import csv
+from config import MOVIMIENTOS_FILE, LAST_ID_FILE
 from registro_ig import app
 from datetime import date
+import os
 
 @app.route("/")
 def index():
-    fichero = open("data/movimientos.txt", "r")
+    fichero = open(MOVIMIENTOS_FILE, "r")
     csvReader = csv.reader(fichero, delimiter=",", quotechar='"')
     """movimientos = []
     for movimiento in csvReader:
@@ -24,12 +26,12 @@ def alta():
         
         errores = validaFormulario(request.form)
         if not errores:
-            fichero = open("data/last_id.txt","r")
+            fichero = open(LAST_ID_FILE,"r")
             registro = fichero.read()
             id = int(registro) + 1
             fichero.close()
 
-            fichero = open("data/movimientos.txt", "a", newline = "")
+            fichero = open(MOVIMIENTOS_FILE, "a", newline = "")
             csvWriter = csv.writer(fichero, delimiter=",", quotechar='"')
             # Generar un nuevo id
             # Leer todo el fichero y me quedo con el último registro
@@ -37,7 +39,7 @@ def alta():
             csvWriter.writerow(["{}".format(id), request.form["date"], request.form["concept"], request.form["quantity"]])
             fichero.close()
 
-            fichero = open("data/last_id.txt", "w")
+            fichero = open(LAST_ID_FILE, "w")
             fichero.write(str(id))
             fichero.close()
 
@@ -91,7 +93,7 @@ def borrar(id):
         2. devolver el formulario html con los datos de mi registro, no modificables
         3. tendra un boton que diga confirmar
         """
-        fichero = open("data/movimientos.txt", "r", newline="")
+        fichero = open(MOVIMIENTOS_FILE, "r", newline="")
         csvReader = csv.reader(fichero, delimiter=",",quotechar='"')
         registro_definitivo = []
         for registro in csvReader:
@@ -109,4 +111,18 @@ def borrar(id):
         """
         borrar el registro
         """
-        return f"Este es el id que vamos a borrar {id}"
+        fichero_old = open(MOVIMIENTOS_FILE, "r")
+        fichero = open("data/movimientos_nuevos.txt", "w", newline="")
+        csvReader = csv.reader(fichero_old, delimiter=",", quotechar='"')
+        csvWriter = csv.writer(fichero, delimiter=",", quotechar='"')
+        for registro in csvReader:
+            if registro[0] != str(id):
+                csvWriter.writerow(registro)
+        fichero_old.close()
+        fichero.close()
+
+        os.remove(MOVIMIENTOS_FILE)
+        os.rename("data/movimientos_nuevos.txt", MOVIMIENTOS_FILE)
+
+        return redirect(url_for("index"))
+
