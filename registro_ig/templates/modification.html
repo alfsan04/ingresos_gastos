@@ -3,9 +3,25 @@
     <h1>
         Modificación de ingreso-Gasto
     </h1>
-    <p>
-        En construcción modificación de datos
-    </p>
+    <form action="/modificar/{{ registro[0] }}" method="post">
+        
+        <label for="date">Fecha:</label>
+        <input type="date" name="date" id="date" value="{{ registro[1] }}" required>
+        <label for="concept">Concepto:</label>
+        <input type="text" name="concept" id="concept" placeholder="Introduce en qué te has gastado la pasta" value="{{ registro[2] }}">
+        <label for="quantity">Cantidad</label>
+        <input type="number" name="quantity" id="quantity" placeholder="Euros gastados o ingresados" step="0.01" value="{{ registro[3] }}">
+
+        <input type="submit" value="Aceptar">
+        <input type="int" name="id" id="id" value="{{ registro[0] }}" style="visibility:hidden">
+    </form>
     <a href="/">Volver</a>
+    <article class="errores">
+        <ul>
+            {% for error in msgErrors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </article>
 {% endblock %}
    

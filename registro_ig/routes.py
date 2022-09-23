@@ -4,7 +4,7 @@ import csv
 from config import MOVIMIENTOS_FILE, LAST_ID_FILE
 from registro_ig import app
 from datetime import date
-from registro_ig.models import select_all, select_by, delete_by, insert
+from registro_ig.models import select_all, select_by, delete_by, insert, modification
 import os
 
 @app.route("/")
@@ -36,22 +36,15 @@ def validaFormulario(camposFormulario):
 
     return errores
 
-@app.route("/modification")
-def modificacion():
-    return render_template("modification.html", pageTitle = "Modificacion")
-
-@app.route("/delete")
-def baja():
-    return render_template("delete.html", pageTitle = "Baja")
-
 @app.route("/modificar/<int:id>", methods=["GET","POST"])
 def modifica(id):
     if request.method == "GET":
-        """
-        1. Consultar en movimientos .txt y recuperar el movimiento con id de la petición
-        2. Devolver el formulario html con los datos de mi registro
-        """
-        return render_template("modifica.html", registro = [])
+        registro_definitivo = select_by(id)
+
+        if registro_definitivo:
+            return render_template("modification.html", registro = registro_definitivo)
+        else:
+            return redirect(url_for("index"))
     else:
         """
         1. validar el registro de entrada
@@ -59,7 +52,13 @@ def modifica(id):
         3. redirect
         4. si el registro es incorrecto la gestion de errores que conocemos
         """
-        pass
+        errores = validaFormulario(request.form)
+        if not errores:
+            modification([request.form["id"], request.form["date"], request.form["concept"], request.form["quantity"]])
+
+            return redirect("/")
+        else:
+            return render_template("modification.html", pageTitle="Modificacion", msgErrors=errores, registro=dict(request.form))
 
 @app.route("/borrar/<int:id>", methods=["GET","POST"])
 def borrar(id):
