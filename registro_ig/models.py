@@ -67,17 +67,17 @@ def insert(registro):
 
     saveLastId(id)
 
-def modification(movimiento):
+def updated_by(registro_mod):
     
     fichero_old = open(MOVIMIENTOS_FILE, "r")
-    fichero = open("data/movimientos_nuevos.txt", "w", newline="")
+    fichero = open(NEW_FILE, "w", newline="")
     csvReader = csv.reader(fichero_old, delimiter=",", quotechar='"')
     csvWriter = csv.writer(fichero, delimiter=",", quotechar='"')
     for registro in csvReader:
-        if registro[0] != movimiento[0]:
+        if registro[0] != str(registro_mod[0]):
             csvWriter.writerow(registro)
         else:
-            csvWriter.writerow(movimiento)
+            csvWriter.writerow(registro_mod)
 
     fichero_old.close()
     fichero.close()
