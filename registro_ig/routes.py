@@ -36,6 +36,9 @@ def validaFormulario(camposFormulario):
 
     return errores
 
+def form_to_list(id, form):
+    return [str(id), request.form["date"], request.form["concept"], request.form["quantity"]]
+
 @app.route("/modificar/<int:id>", methods=["GET","POST"])
 def modifica(id):
     if request.method == "GET":
@@ -49,11 +52,11 @@ def modifica(id):
 
         errores = validaFormulario(request.form)
         if not errores:
-            updated_by([id, request.form["date"], request.form["concept"], request.form["quantity"]])
+            updated_by(form_to_list(id, request.form))
 
             return redirect(url_for("index"))
         else:
-            return render_template("update.html", pageTitle="Modificacion", msgErrors=errores, registro=[id,request.form["date"], request.form["concept"], request.form["quantity"]])
+            return render_template("update.html", pageTitle="Modificacion", msgErrors=errores, registro=form_to_list(id, request.form))
 
 @app.route("/borrar/<int:id>", methods=["GET","POST"])
 def borrar(id):

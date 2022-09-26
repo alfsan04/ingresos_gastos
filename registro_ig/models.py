@@ -74,7 +74,7 @@ def updated_by(registro_mod):
     csvReader = csv.reader(fichero_old, delimiter=",", quotechar='"')
     csvWriter = csv.writer(fichero, delimiter=",", quotechar='"')
     for registro in csvReader:
-        if registro[0] != str(registro_mod[0]):
+        if registro[0] != registro_mod[0]:
             csvWriter.writerow(registro)
         else:
             csvWriter.writerow(registro_mod)
