@@ -37,7 +37,7 @@ def validaFormulario(camposFormulario):
     return errores
 
 def form_to_list(id, form):
-    return [str(id), request.form["date"], request.form["concept"], request.form["quantity"]]
+    return [str(id), form["date"], form["concept"], form["quantity"]]
 
 @app.route("/modificar/<int:id>", methods=["GET","POST"])
 def modifica(id):
